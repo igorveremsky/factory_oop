@@ -1,15 +1,23 @@
 <?php
-//Интерфейс обязательных свойств роботов
+/**
+ * Interface IRobot
+ *
+ * Интерфейс роботов
+ */
 interface IRobot {
     function getPower();
     function getOn();
     function getType();
 }
-//Обобщенный класс для робота
+/**
+ * Class Robot
+ *
+ * Абстрактный класс для роботов
+ */
 class Robot implements IRobot{
-    public $power = 0;
-    public $on = TRUE;
-    public $type;
+    protected $power = 0;
+    protected $on = TRUE;
+    protected $type;
 
     public function setOn()
     {
@@ -21,44 +29,76 @@ class Robot implements IRobot{
         $this->on = FALSE;
     }
 
+    /**
+     * @param $robot_power
+     */
     public function setPower($robot_power)
     {
         $this->power = $robot_power;
     }
 
+    /**
+     * @param $robot_type
+     */
     public function setType($robot_type)
     {
         $this->type = $robot_type;
     }
 
+    /**
+     * @return int
+     */
     public function getPower()
     {
         return $this->power;
     }
 
+    /**
+     * @return bool
+     */
     public function getOn()
     {
         return $this->on;
     }
 
+    /**
+     * @return mixed
+     */
     public function getType()
     {
         return $this->type;
     }
 }
-//Первый робот
+/**
+ * Class RobotOne
+ *
+ * Первый робот
+ */
 class RobotOne extends Robot {
-    public $power = 10;
-    public $type = 'machinist';
+    protected $power = 10;
+    protected $type = 'machinist';
 }
-//Второй робот
+/**
+ * Class RobotTwo
+ *
+ * Второй робот
+ */
 class RobotTwo extends Robot {
-    public $power = 10;
-    public $type = 'supervisor';
+    protected $power = 10;
+    protected $type = 'supervisor';
 }
+
+/**
+ * Class FactoryBuild
+ */
 class FactoryBuild {
     protected $robots = array();
 
+    /**
+     * @param Robot $robot
+     * @param $count
+     * @return array
+     */
     public function make(Robot $robot, $count) {
         if ($count == 0) {
             return 0;
@@ -77,6 +117,11 @@ class FactoryBuild {
         return $this->robots;
     }
 
+    /**
+     * @param Robot $robot
+     * @param $to_off_count
+     * @return array
+     */
     public function makeOff(Robot $robot, $to_off_count) {
         if ($to_off_count == 0) {
             return 0;
@@ -106,6 +151,10 @@ class FactoryBuild {
         return $this->robots;
     }
 
+    /**
+     * @param Robot $robot
+     * @return int
+     */
     public function getFactoryPower(Robot $robot) {
         $factory_power = 0;
         $same_type_on_robots = $this->filterByType($robot, TRUE);
@@ -117,7 +166,12 @@ class FactoryBuild {
         return $factory_power;
     }
 
-    protected function filterByType(Robot $robot, $only_on = false) {
+    /**
+     * @param Robot $robot
+     * @param bool $only_on
+     * @return array
+     */
+    protected function filterByType(Robot $robot, $only_on = FALSE) {
         $robot_type = $robot->getType();
         $filter_robots = array();
 
@@ -142,6 +196,10 @@ echo '<br/>Power of robots with RobotsOne type<br/><br/>';
 var_dump($Factory->getFactoryPower($RobotOne));
 echo '<br/>Unable 2 robots with RobotsOne type<br/><br/>';
 var_dump($Factory->makeOff($RobotOne, 2));
+echo 'Enable 5 robots with RobotsOne type<br/><br/>';
+var_dump($Factory->make($RobotOne, 5));
+echo '<br/>Power of robots with RobotsOne type<br/><br/>';
+var_dump($Factory->getFactoryPower($RobotOne));
 echo '<br/>Unable 2 robots with RobotsTwo type<br/><br/>';
 var_dump($Factory->makeOff($RobotTwo, 2));
 echo '<br/>Change power to 15 for robots with RobotsTwo type<br/>';
